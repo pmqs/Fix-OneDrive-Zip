@@ -1,5 +1,7 @@
 # Fix-OneDrive-Zip
 
+![Linux build](https://github.com/pmqs/Fix-OneDrive-Zip/workflows/Linux%20build/badge.svg)
+
 Fix OneDrive Zip files larger than 4Gig that have an invalid `Total Number
 of Disks` field in the `ZIP64 End Central Directory Locator`. The value in
 this field should be 1, but OneDrive sets it to 0. This makes it difficult
