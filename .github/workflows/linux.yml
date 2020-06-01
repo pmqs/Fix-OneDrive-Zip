@@ -38,5 +38,7 @@ jobs:
         perl-version: ${{ matrix.perl }}
     - name: Perl version
       run: perl -V
+    - name: Unzip version
+      run: unzip -h      
     - name: Syntax Check
       run: perl -c fix-onedrive-zip
