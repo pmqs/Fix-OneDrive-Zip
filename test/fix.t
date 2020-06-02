@@ -43,14 +43,18 @@ is $status, 0, "fix-onedrive-zip returned zero" ;
 ($status, $stdout, $stderr) = run("unzip -l $BadZIP");
 
 is $status, 0, "unzip -l returned zero for fixed zip file";
-is removeHour($stdout), removeHour(<<EOM), "unzip -l output correct";
-Archive:  $BadZIP
-  Length      Date    Time    Name
----------  ---------- -----   ----
-       15  2020-06-01 16:03   data.txt
----------                     -------
-       15                     1 file
-EOM
+
+# Output should be like this
+#
+# Archive:  $BadZIP
+#   Length      Date    Time    Name
+# ---------  ---------- -----   ----
+#        15  2020-06-01 16:03   data.txt
+# ---------                     -------
+#        15                     1 file
+# EOM
+
+like $stdout, qr/:03\s+data.txt/, "unzip -l shows data.txt";
 
 
 is $stderr, "", "No stderr";
