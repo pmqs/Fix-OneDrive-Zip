@@ -51,7 +51,11 @@ Archive:  $BadZIP
 ---------                     -------
        15                     1 file
 EOM
-like $stdout, qr($expected), "unzip -l output correct";
+
+# github Macos action does work with "like"
+# so do an explicit test
+ok $stdout =~ /$expected/, "unzip -l output correct";;
+# like $stdout, qr($expected), "unzip -l output correct";
 
 is $stderr, "", "No stderr";
 
