@@ -43,4 +43,4 @@ jobs:
     - name: Syntax Check
       run: perl -c fix-onedrive-zip
     - name: Test
-      run: perl test/fix.t
+      run: perl test\fix.t
