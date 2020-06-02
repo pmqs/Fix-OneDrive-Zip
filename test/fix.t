@@ -43,19 +43,15 @@ is $status, 0, "fix-onedrive-zip returned zero" ;
 ($status, $stdout, $stderr) = run("unzip -l $BadZIP");
 
 is $status, 0, "unzip -l returned zero for fixed zip file";
-my $expected = <<EOM;
+is removeHour($stdout), removeHour(<<EOM), "unzip -l output correct";
 Archive:  $BadZIP
   Length      Date    Time    Name
 ---------  ---------- -----   ----
-       15  2020-06-01 \\d\\d:03   data.txt
+       15  2020-06-01 16:03   data.txt
 ---------                     -------
        15                     1 file
 EOM
 
-# github Macos action does work with "like"
-# so do an explicit test
-ok $stdout =~ /$expected/, "unzip -l output correct";;
-# like $stdout, qr($expected), "unzip -l output correct";
 
 is $stderr, "", "No stderr";
 
@@ -74,6 +70,13 @@ chdir $HERE ;
 
 exit ;
 
+sub removeHour
+{
+    my $string = shift;
+    $string =~ s/15  2020-06-01 \d\d:03   data.txt/15  2020-06-01 XX:03   data.txt/;
+
+    $string;
+}
 
 sub readFile
 {
