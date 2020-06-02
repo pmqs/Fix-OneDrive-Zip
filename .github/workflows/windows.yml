@@ -42,3 +42,5 @@ jobs:
       run: unzip -h
     - name: Syntax Check
       run: perl -c fix-onedrive-zip
+    - name: Test
+      run: prove -v test
