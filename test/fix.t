@@ -43,14 +43,16 @@ is $status, 0, "fix-onedrive-zip returned zero" ;
 ($status, $stdout, $stderr) = run("unzip -l $BadZIP");
 
 is $status, 0, "unzip -l returned zero for fixed zip file";
-like $stdout, <<EOM, "unzip -l output correct";
-/Archive:  $BadZIP
+my $expected = <<EOM;
+Archive:  $BadZIP
   Length      Date    Time    Name
 ---------  ---------- -----   ----
        15  2020-06-01 \\d\\d:03   data.txt
 ---------                     -------
-       15                     1 file/
+       15                     1 file
 EOM
+like $stdout, qr($expected), "unzip -l output correct";
+
 is $stderr, "", "No stderr";
 
 ok ! -e "data.txt", "data.txt does not exist yet";
