@@ -66,6 +66,8 @@ is $stdout, "Archive:  $BadZIP\n extracting: data.txt                \n", "stdou
 ok -e "data.txt", "data.txt now exists";
 is readFile("data.txt"), "this is a test\n", "File contents ok";
 
+chdir $HERE ;
+
 exit ;
 
 
