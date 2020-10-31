@@ -39,7 +39,7 @@ jobs:
     - name: Perl version
       run: perl -V
     - name: Unzip version
-      run: unzip -h      
+      run: unzip -h
     - name: Syntax Check
       run: perl -c fix-onedrive-zip
     - name: Test
