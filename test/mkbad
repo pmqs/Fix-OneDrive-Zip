@@ -10,7 +10,7 @@
 #
 # This program changes the 'Total Number of Disks' field value to 1.
 #
-# Copyright (c) 2020-2022 Paul Marquess. All rights reserved.
+# Copyright (c) 2020 Paul Marquess. All rights reserved.
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.
@@ -29,7 +29,7 @@ use constant ZIP64_END_CENTRAL_LOC_HDR_SIG     => 0x07064b50;
 sub Seek;
 sub Read;
 
-my $VERSION = '1.01' ;
+my $VERSION = '1.00' ;
 my $dry_run ;
 
 GetOptions ("dry-run" => \$dry_run,
@@ -83,16 +83,16 @@ for my $filename (@ARGV)
 
     my $total_disks = unpack("V", substr($data, 16, 4)) ;
 
-    if ($total_disks == 1)
-    {
-        print "Nothing to do: 'Total Number of Disks' field is already 1\n";
-        next
-    }
-
-    if ($total_disks != 0)
-    {
-        die "Error: 'Total Number of Disks' field is $total_disks\n";
-    }
+#    if ($total_disks == 1)
+#    {
+#        print "Nothing to do: 'Total Number of Disks' field is already 1\n";
+#        next
+#    }
+#
+#    if ($total_disks != 0)
+#    {
+#        die "Error: 'Total Number of Disks' field is $total_disks\n";
+#    }
 
     Seek $filename, $fh, -42 + 16 ;
 
@@ -102,7 +102,7 @@ for my $filename (@ARGV)
     }
     else
     {
-        print $fh pack "V", 1 ;
+        print $fh pack "V", 0 ;
         print "Updated '$filename'\n";
     }
 }
@@ -145,7 +145,7 @@ This program changes the 'Total Number of Disks' field value to 1.
 
 See https://github.com/pmqs/Fix-OneDrive-Zip for support.
 
-Copyright (c) 2020-2022 Paul Marquess (pmqs@cpan.org). All rights reserved.
+Copyright (c) 2020 Paul Marquess (pmqs@cpan.org). All rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
