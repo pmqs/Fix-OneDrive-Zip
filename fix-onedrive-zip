@@ -59,7 +59,7 @@ for my $filename (@ARGV)
         unless $sig == ZIP_LOCAL_HDR_SIG ;
 
     # Assume no comment or other trailing data
-    # The last two things n the file are the Z64 & EOCD records
+    # The last two things in the file are the Z64 & EOCD records
 
     Seek  $filename, $fh, -42 ;
 
