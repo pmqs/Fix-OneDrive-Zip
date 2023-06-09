@@ -25,7 +25,33 @@ backup copy of the original file just in case.
 
     perl fix-onedrive-zip [--dry-run] file1.zip [file2.zip...]
 
-The `--dry-run` option will simulate running of the program without making any changes to the Zip file.
+The `--dry-run` option will simulate running of the program without making
+any changes to the Zip file.
+
+## What if this program doesn't fix the issue?
+
+The most common issue reported with this script is the following error
+message:
+
+```Error: Cannot find Zip signature at end of 'somefile.zip'```
+
+To understand the reson for this message you need to know a little bit
+about the structure of a zip file.  Firstly, at the start of a zip file
+there are 4 bytes called the "`local file header signature`" (which get
+unpacked as the litte-endian value `0x04034b50`). For this error case these
+signature bytes *will* be present, so the script knows it likely dealing
+with is a valid zip file.
+
+Once that initial test is done, the script moves to 22 bytes before the end
+of the file and checks that the 4 bytes of the "`end of central dir
+signature`" (little-endian value `0x06054b50`) are present.  In this case
+it doesn't find these signature bytes and terminates with the error message
+shown above.
+
+This typically means that the zip file has been either truncated or has
+become corrupt.
+
+If possible, try downloading the file again.
 
 ## Technical Details
 
@@ -40,7 +66,6 @@ The value in this field should be `1`, but `OneDrive`/`Windows` sets it to `0`.
 
 This program simply changes the `Total Number of Disks` field value to `1`
 if it finds it set to `0` in the Zip file.
-
 ## Support
 
 https://github.com/pmqs/Fix-OneDrive-Zip/issues
