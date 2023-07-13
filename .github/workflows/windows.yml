@@ -13,6 +13,7 @@ jobs:
     strategy:
       matrix:
         perl:
+          - '5.38'
           - '5.36'
           - '5.34'
           - '5.32'
