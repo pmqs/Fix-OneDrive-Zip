@@ -90,7 +90,7 @@ That should download the file `fix-onedrive-zip` into your `Downloads` directory
 ### Step 4: Running the script
 
 The easiest approach to running this script if you are not confortable with running from the command-line is to
-put the `fix-onedrive-zip` script and the zip file you want to fix in the same folder. Lets assume you have both stored in the folder `C:\fixzip` and the name of the OneDrive zip file is `myfile.zip`.
+put the `fix-onedrive-zip` script and the zip file you want to fix in the same folder. Lets assume you have both stored in the folder `C:\fixzip` and the name of the OneDrive zip file you want to fix is `myfile.zip`.
 
 Start by creating a terminal window by typing `Windows+R` and typing `cmd` in the pop-up window.
 
