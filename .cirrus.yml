@@ -9,9 +9,8 @@ task:
   install_script:
     - pkg info
     - pkg install -y perl5
-    - perl -V
   build_script:
-    - perl Makefile.PL
+    - perl -V
   test_script:
     - perl -c fix-onedrive-zip
     - prove -v test
