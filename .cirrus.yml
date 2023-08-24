@@ -10,7 +10,6 @@ task:
     - pkg info
     - pkg install -y perl5
     - perl -V
-    - unzip
   build_script:
     - perl Makefile.PL
   test_script:
