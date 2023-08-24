@@ -1,29 +1,31 @@
-# task:
-#   name: FreeBSD
-#   freebsd_instance:
-#     matrix:
-#       # image: freebsd-11-4-release-amd64
-#       # image: freebsd-12-2-release-amd64
-#       image: freebsd-13-2-release-amd64
-#       # image: freebsd-14-0-release-amd64
-#   install_script:
-#     - pkg info
-#     - pkg install -y perl5
-#   build_script:
-#     - perl -V
-#   test_script:
-#     - perl -c fix-onedrive-zip
-#     - prove -v test
-
-
 task:
-  name: ARM
-  arm_container:
-    image: openjdk:latest
-    cpu: 4
-    memory: 12G
+  name: FreeBSD
+  freebsd_instance:
+    matrix:
+      # image: freebsd-11-4-release-amd64
+      # image: freebsd-12-2-release-amd64
+      image: freebsd-13-2-release-amd64
+      # image: freebsd-14-0-release-amd64
+  install_script:
+    - pkg info
+    - pkg install -y perl5
+  unzip_version:
+    - unzip --version
   build_script:
     - perl -V
   test_script:
     - perl -c fix-onedrive-zip
     - prove -v test
+
+
+# task:
+#   name: ARM
+#   arm_container:
+#     image: ubuntu:latest
+#     cpu: 4
+#     memory: 12G
+#   build_script:
+#     - perl -V
+#   test_script:
+#     - perl -c fix-onedrive-zip
+#     - prove -v test
