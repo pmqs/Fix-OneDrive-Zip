@@ -9,7 +9,7 @@ task:
   install_script:
     - pkg info
     - pkg install -y perl5
-  unzip_version:
+  unzip_script:
     - unzip --version
   build_script:
     - perl -V
