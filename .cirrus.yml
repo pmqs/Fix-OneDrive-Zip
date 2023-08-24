@@ -1,14 +1,24 @@
+# task:
+#   name: FreeBSD
+#   freebsd_instance:
+#     matrix:
+#       # image: freebsd-11-4-release-amd64
+#       # image: freebsd-12-2-release-amd64
+#       image: freebsd-13-2-release-amd64
+#       # image: freebsd-14-0-release-amd64
+#   install_script:
+#     - pkg info
+#     - pkg install -y perl5
+#   build_script:
+#     - perl -V
+#   test_script:
+#     - perl -c fix-onedrive-zip
+#     - prove -v test
+
+
 task:
   name: FreeBSD
-  freebsd_instance:
-    matrix:
-      # image: freebsd-11-4-release-amd64
-      # image: freebsd-12-2-release-amd64
-      image: freebsd-13-2-release-amd64
-      # image: freebsd-14-0-release-amd64
-  install_script:
-    - pkg info
-    - pkg install -y perl5
+  arm_container:
   build_script:
     - perl -V
   test_script:
