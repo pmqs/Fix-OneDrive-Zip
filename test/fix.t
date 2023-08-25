@@ -27,9 +27,19 @@ copy($testDir . '/' . $BadZIP, $BadZIP)
 ########################
 ($status, $stdout, $stderr) = run("unzip -l $BadZIP");
 
-ok $status, "unzip returns error for bad zip file";
-isnt $stderr, "", "stderr not empty";
-is $stdout, "Archive:  $BadZIP\n", "No stdout";
+if ($^O eq 'freebsd') {
+    # bsdunzip returns zero status
+    # nothing to stderr
+    #
+    ok ! $status, "bsdunzip returns zero for bad zip file";
+    is $stderr, "", "stderr is empty";
+    unlike $stdout, qr/data.txt/, "No mention of data.txt";
+}
+else {
+    ok $status, "unzip returns error for bad zip file";
+    isnt $stderr, "", "stderr not empty";
+    unlike $stdout, qr/data.txt/, "No mention of data.txt";
+}
 
 
 # Fix the zip file
@@ -65,7 +75,7 @@ ok ! -e "data.txt", "data.txt does not exist yet";
 
 is $status, 0, "unzip returned zero for extraction";
 is $stderr, "", "stderr empty";
-is $stdout, "Archive:  $BadZIP\n extracting: data.txt                \n", "stdout ok";
+like $stdout, qr/extracting: data.txt/, "stdout ok";
 
 ok -e "data.txt", "data.txt now exists";
 is readFile("data.txt"), "this is a test\n", "File contents ok";
