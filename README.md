@@ -3,6 +3,7 @@
 [![Linux build](https://github.com/pmqs/Fix-OneDrive-Zip/workflows/Linux%20build/badge.svg)](https://github.com/pmqs/Fix-OneDrive-Zip/actions)
 [![Macos build](https://github.com/pmqs/Fix-OneDrive-Zip/workflows/Macos%20build/badge.svg)](https://github.com/pmqs/Fix-OneDrive-Zip/actions)
 [![Windows build](https://github.com/pmqs/Fix-OneDrive-Zip/workflows/Windows%20build/badge.svg)](https://github.com/pmqs/Fix-OneDrive-Zip/actions)
+[![FreeBSD](https://api.cirrus-ci.com/github/pmqs/Fix-OneDrive-Zip.svg?task=FreeBSD)](https://cirrus-ci.com/github/pmqs/Fix-OneDrive-Zip?task=FreeBSD)
 
 This program fixes an issue with Zip files larger than 4 Gig created by
 `OneDrive` and also the Windows 10 right-click action "`Send-To/Compressed
