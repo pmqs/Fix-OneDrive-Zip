@@ -135,7 +135,7 @@ If possible, try downloading the file again.
 
 ## Technical Details
 
-If you want to understand more about the internal structuire of Zip files,
+If you want to understand more about the internal structure of Zip files,
 the primary reference is
 [APPNOTE.TXT](https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT).
 
