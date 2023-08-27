@@ -5,8 +5,8 @@
 [![Windows build](https://github.com/pmqs/Fix-OneDrive-Zip/workflows/Windows%20build/badge.svg)](https://github.com/pmqs/Fix-OneDrive-Zip/actions)
 [![FreeBSD](https://api.cirrus-ci.com/github/pmqs/Fix-OneDrive-Zip.svg?task=FreeBSD)](https://cirrus-ci.com/github/pmqs/Fix-OneDrive-Zip?task=FreeBSD)
 
-This program fixes an issue with Zip files larger than 4 Gig created by
-`OneDrive` and also the Windows 10 right-click action "`Send-To/Compressed
+This program fixes an issue with Zip files larger than 4 Gig created by either
+`OneDrive` or  the Windows 10 right-click action "`Send-To/Compressed
 (zip) folder`". At the time of writing these Zip files cannot be unzipped
 using some of the well-know Zip archivers.
 
@@ -17,10 +17,12 @@ This program automates the manual process described in the referenced page.
 
 **Notes**
 
-1. This program will modify your Zip file, so it is good practice to take a
+1. It may be possible to work around this issue by updating the archiving program you are using to the latest version.
+
+2. This program will modify your Zip file, so it is good practice to take a
 backup copy of the original file just in case.
 
-2. You need a 64-bit build of `perl` installed on your system to run this program.
+3. You need a 64-bit build of `perl` installed on your system to run this program.
 
 ## Usage
 
@@ -115,23 +117,32 @@ message:
 
 ```Error: Cannot find Zip signature at end of 'somefile.zip'```
 
-To understand the reson for this message you need to know a little bit
-about the structure of a zip file.  Firstly, at the start of a zip file
-there are 4 bytes called the "`local file header signature`" (which get
-unpacked as the litte-endian value `0x04034b50`). For this error case these
+To understand what this message means you first need to know a little bit
+about the structure of the metadata in a zip file.
+
+At the start of a zip file
+there are 4 bytes called the "`local file header signature`". The majority of metedata values in a zip file are stored in little-endian byte order, so these 4 bytes are unpacked as the litte-endian value `0x04034b50`. For this error case these 4
 signature bytes *will* be present, so the script knows it likely dealing
 with a zip file.
 
 Once that initial test is done, the script moves to 22 bytes before the end
 of the file and checks that the 4 bytes of the "`end of central dir
 signature`" (little-endian value `0x06054b50`) are present.  In this case
-it doesn't find these signature bytes and terminates with the error message
-shown above.
+it *doesn't* find these signature bytes.
 
-This typically means that the zip file has been either truncated or has
-become corrupt.
+This program can only work with a well-formed zip file, so it now terminates immediately with the error message shown above.
 
-If possible, try downloading the file again.
+The root-cause for this error is typically a zip file that has either been truncated or partially corrupted (i.e. the end the file has been overwritten with random data).
+
+### Strategies for recovering data
+
+The most straightforward way to deal with a truncated/corrupt zip file is to download a fresh copy of the zip file.
+
+If downloading is not an option it may be possible to recover some/all of the zip file payload data. It just depends on how badly damaged the file is. Be aware - if payload data has been overwritten or is absent there is no way that to retrieve this data from the zip file.
+
+There are plenty of articles available online that discuss recovering data from corrupt zip files, so I'll only mention that the  [Info-ZIP](https://infozip.sourceforge.net/) implementaion of `zip` (most Unix/Mac systems ship with this program) has two commandline options,  `-F` and `-FF`,  that can be used to attempt to fix zip files.
+
+
 
 ## Technical Details
 
