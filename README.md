@@ -19,7 +19,7 @@ This program automates the manual process described in the referenced page.
 >
 > 1. It may be possible to work around this issue by updating the archiving program you are using to the latest version.
 >
-> 2. This program will modify your Zip file, so it is good practice to take a backup copy of the original file just in case.
+> 2. It is strongly recommended to take a backup copy of your original zip file before running this program.
 >
 > 3. You need a 64-bit build of `Perl` installed on your system to run this program.
 
