@@ -1,11 +1,11 @@
 # Fix-OneDrive-Zip
 
 [![Linux build](https://github.com/pmqs/Fix-OneDrive-Zip/workflows/Linux%20build/badge.svg)](https://github.com/pmqs/Fix-OneDrive-Zip/actions)
-[![Macos build](https://github.com/pmqs/Fix-OneDrive-Zip/workflows/Macos%20build/badge.svg)](https://github.com/pmqs/Fix-OneDrive-Zip/actions)
+[![MacOS build](https://github.com/pmqs/Fix-OneDrive-Zip/workflows/Macos%20build/badge.svg)](https://github.com/pmqs/Fix-OneDrive-Zip/actions)
 [![Windows build](https://github.com/pmqs/Fix-OneDrive-Zip/workflows/Windows%20build/badge.svg)](https://github.com/pmqs/Fix-OneDrive-Zip/actions)
 [![FreeBSD](https://api.cirrus-ci.com/github/pmqs/Fix-OneDrive-Zip.svg?task=FreeBSD)](https://cirrus-ci.com/github/pmqs/Fix-OneDrive-Zip?task=FreeBSD)
 
-This program fixes an issue with Zip files larger than 4 Gig created by either
+This program fixes an issue with Zip files larger than 4 Gig that have been created by either
 `OneDrive` or  the Windows 10 right-click action "`Send-To/Compressed
 (zip) folder`". At the time of writing these Zip files cannot be unzipped
 using some of the well-know Zip archivers.
@@ -14,14 +14,16 @@ For a really detailed summary of the issue, see
 [Does Microsoft OneDrive export large ZIP files that are corrupt?](https://www.bitsgalore.org/2020/03/11/does-microsoft-onedrive-export-large-ZIP-files-that-are-corrupt).
 
 This program automates the manual process described in the referenced page.
+It has been tested on Windows, Linux, MacOS & FreeBSD.
 
 > [!NOTE]
 >
-> 1. It may be possible to work around this issue by updating the archiving program you are using to the latest version.
+> 1. It may be possible to work around this issue by updating the archiving program you are using to the latest version. No guarantees.
 >
 > 2. It is strongly recommended to take a backup copy of your original zip file before running this program.
 >
 > 3. You need a 64-bit build of `Perl` installed on your system to run this program.
+>
 
 ## Usage
 
@@ -33,15 +35,15 @@ any changes to the Zip file.
 <details>
 <summary> <h2>Notes for Windows Users</h2></summary>
 
-If you are running Windows and don't know what a perl script is, or how to run one, this section
+If you are running Windows and don't know what a Perl script is, or how to run one, this section
 will walk you through the process.
 
 <details>
 <summary> <b>Step 1: Check if you already have Perl installed</b></summary>
 <p></p>
 
-The `fix-onedrive-zip` script is written in `Perl`. To run it on your PC you need
-the `perl` executable.
+The `fix-onedrive-zip` script is written in `Perl`. To run it on your PC you need to have
+the `perl` executable installed.
 
 To check if it is already installed, create a terminal window by typing `Windows+R`.
 In the pop-up window type `cmd`. You should now have a terminal window open.
@@ -81,7 +83,7 @@ For this tutorial I've used [Strawberry Perl](https://strawberryperl.com/), but 
 
 Use the instructions [here](https://www.perltutorial.org/setting-up-perl-development-environment/) to install the 64-bit "*Recommended version*" of `perl` from the [Strawberry Perl](https://strawberryperl.com/) site.
 
-Once the installation is complete, run `Step 1`, above, to check that the perl works ok
+Once the installation is complete, run `Step 1`, above, to double-check that the perl works ok
 from the command-line in a terminal window.
 </details>
 
@@ -89,7 +91,7 @@ from the command-line in a terminal window.
 <summary> <b>Step 3: Download the fix-onedrive-zip script</b></summary>
 <p></p>
 
-You now need to get the script `fix-onedrive-zip` downloaded from GitHub and stored on your PC. In a browser navigate to
+You now need to get the `fix-onedrive-zip` script downloaded from GitHub and stored on your PC. In a browser navigate to
 [here](https://github.com/pmqs/Fix-OneDrive-Zip/blob/master/fix-onedrive-zip) and
 select the "`Download raw file`" icon, as highlighted below
 
@@ -120,6 +122,8 @@ You can now run the `fix-onedrive-zip` script by typing this in the terminal win
 ```
 perl fix-onedrive-zip myfile.zip
 ```
+
+That should have fixed your zip file.
 </details>
 </details>
 
@@ -156,7 +160,7 @@ The root-cause for this error is typically a zip file that has either been trunc
 
 The most straightforward way to deal with a truncated/corrupt zip file is to download a fresh copy of the zip file.
 
-If downloading is not an option it may be possible to recover some/all of the zip file payload data. It just depends on how badly damaged the file is. Be aware - if payload data has been overwritten or is absent there is no way that to retrieve this data from the zip file.
+If downloading is not an option, it may be possible to recover some/all of the zip file payload data. It just depends on how badly damaged the file is. Be aware - if payload data has been overwritten or is absent there is no way that to retrieve this data from the zip file.
 
 There are plenty of articles available online that discuss recovering data from corrupt zip files, so I'll only mention that the  [Info-ZIP](https://infozip.sourceforge.net/) implementaion of `zip` (most Unix/Mac systems ship with this program) has two commandline options,  `-F` and `-FF`,  that can be used to attempt to fix zip files.
 
@@ -183,8 +187,8 @@ if it finds it set to `0` in a Zip file.
 
 ## Support
 
-https://github.com/pmqs/Fix-OneDrive-Zip/issues
-
+If you have any problem running this program, or have suggestions or questions,
+please report them at https://github.com/pmqs/Fix-OneDrive-Zip/issues.
 
 ## Copyright
 
