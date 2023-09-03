@@ -1,19 +1,12 @@
 #!/usr/bin/perl
 
-# fix-onedrive-zip
+# mkbad
 #
-# Fix OneDrive/Windows Zip files larger than 4Gig that have an invalid
-# 'Total Number of Disks' field in the 'ZIP64 End Central Directory
-# Locator'. The value in this field should be 1, but OneDrive/Windows sets
-# it to 0.  This makes it difficult to work with these files using standard
-# unzip utilities.
+# This is a hacked version of the 'fix-onedrive-zip' script.
+# It is used for testing only. The script will take a well-formed zip file
+# and modify it to have the issue that fix-onedrive-zip
+# is used to address.
 #
-# This program changes the 'Total Number of Disks' field value to 1.
-#
-# Copyright (c) 2020 Paul Marquess. All rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify it
-# under the same terms as Perl itself.
 
 use strict;
 use warnings;
