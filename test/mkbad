@@ -25,8 +25,7 @@ sub Read;
 my $VERSION = '1.00' ;
 my $dry_run ;
 
-GetOptions ("dry-run" => \$dry_run,
-            "help"    => \&Usage)
+GetOptions ("dry-run" => \$dry_run)
     or Usage("Error in command line arguments\n");
 
 Usage()
@@ -52,7 +51,7 @@ for my $filename (@ARGV)
         unless $sig == ZIP_LOCAL_HDR_SIG ;
 
     # Assume no comment or other trailing data
-    # The last two things n the file are the Z64 & EOCD records
+    # The last two things in the file are the Z64 & EOCD records
 
     Seek  $filename, $fh, -42 ;
 
@@ -95,6 +94,7 @@ for my $filename (@ARGV)
     }
     else
     {
+        # This line creates the bad zip file
         print $fh pack "V", 0 ;
         print "Updated '$filename'\n";
     }
@@ -122,27 +122,4 @@ sub Read
         or die "Cannot read from '$filename': $!\n" ;
 
     return $data;
-}
-
-sub Usage
-{
-    print <<'EOM';
-Usage: fix-onedrive-zip [--dry-run] file1.zip [file2.zip...]
-
-Fix OneDrive/Windows Zip files larger than 4Gig that have an invalid 'Total
-Number of Disks' field in the 'ZIP64 End Central Directory Locator'. The
-value in this field should be 1, but OneDrive/Windows sets it to 0. This
-makes it difficult to work with these files using standard unzip utilities.
-
-This program changes the 'Total Number of Disks' field value to 1.
-
-See https://github.com/pmqs/Fix-OneDrive-Zip for support.
-
-Copyright (c) 2020 Paul Marquess (pmqs@cpan.org). All rights reserved.
-
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
-
-EOM
-    exit;
 }
