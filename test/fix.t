@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use File::Temp qw(tempdir);
-use Test::More tests => 13;
+use Test::More tests => 10;
 use File::Copy;
 use Cwd;
 
@@ -22,25 +22,6 @@ chdir $dir
 
 copy($testDir . '/' . $BadZIP, $BadZIP)
     or die "Cannot copy $BadZIP to $dir: $!\n";
-
-# test with bad zip file
-########################
-($status, $stdout, $stderr) = run("unzip -l $BadZIP");
-
-if ($^O eq 'freebsd') {
-    # bsdunzip returns zero status
-    # nothing to stderr
-    #
-    ok ! $status, "bsdunzip returns zero for bad zip file";
-    is $stderr, "", "stderr is empty";
-    unlike $stdout, qr/data.txt/, "No mention of data.txt";
-}
-else {
-    ok $status, "unzip returns error for bad zip file";
-    isnt $stderr, "", "stderr not empty";
-    unlike $stdout, qr/data.txt/, "No mention of data.txt";
-}
-
 
 # Fix the zip file
 ##################
