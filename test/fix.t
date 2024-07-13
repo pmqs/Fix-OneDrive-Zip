@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use File::Temp qw(tempdir);
-use Test::More tests => 10;
+use Test::More tests => 17;
 use File::Copy;
 use Cwd;
 
@@ -20,46 +20,80 @@ my $dir = tempdir(CLEANUP => 1);
 chdir $dir
     or die "Cannot chdir to '$dir': $!\n";
 
-copy($testDir . '/' . $BadZIP, $BadZIP)
-    or die "Cannot copy $BadZIP to $dir: $!\n";
+{
+    # Error: zip file does not exist
+    ################################
+    diag "Zip file does not exist";
+    my $not_there = "not-exist";
+    ($status, $stdout, $stderr) = run("perl $FixZip $not_there");
 
-# Fix the zip file
-##################
-($status, $stdout, $stderr) = run("perl $FixZip $BadZIP");
+    isnt $status, 0, "fix-onedrive-zip returned non-zero" ;
+    is $stdout, "", "no stdout";
+    is $stderr, "Error: Cannot open '$not_there': No such file or directory\n", "'$not_there' does not exist";
+}
 
-is $status, 0, "fix-onedrive-zip returned zero" ;
+{
+    # Error: zip file is empty
+    ##########################
+    diag "Zip file is empty";
+    my $empty = "empty";
+    open my $fh,  ">", $empty
+        or die "Error: Cannot open '$empty': $!\n";
 
-# Now check that the zip file has been fixed
-#############################################
-($status, $stdout, $stderr) = run("unzip -l $BadZIP");
+    close $fh;
 
-is $status, 0, "unzip -l returned zero for fixed zip file";
+    is -s $empty, 0, "test file is empty";
 
-# Output should be like this
-#
-# Archive:  $BadZIP
-#   Length      Date    Time    Name
-# ---------  ---------- -----   ----
-#        15  2020-06-01 16:03   data.txt
-# ---------                     -------
-#        15                     1 file
-# EOM
+    ($status, $stdout, $stderr) = run("perl $FixZip $empty");
 
-like $stdout, qr/:03\s+data.txt/, "unzip -l shows data.txt";
+    isnt $status, 0, "fix-onedrive-zip returned non-zero" ;
+    is $stdout, "", "no stdout";
+    is $stderr, "Error: zip file '$empty' is empty\n", "'$empty' is empty";
+}
+
+{
+    # Fix a zip file
+    ################
+
+    copy($testDir . '/' . $BadZIP, $BadZIP)
+        or die "Cannot copy $BadZIP to $dir: $!\n";
+
+    ($status, $stdout, $stderr) = run("perl $FixZip $BadZIP");
+
+    is $status, 0, "fix-onedrive-zip returned zero" ;
+
+    # Now check that the zip file has been fixed
+    #############################################
+    ($status, $stdout, $stderr) = run("unzip -l $BadZIP");
+
+    is $status, 0, "unzip -l returned zero for fixed zip file";
+
+    # Output should be like this
+    #
+    # Archive:  $BadZIP
+    #   Length      Date    Time    Name
+    # ---------  ---------- -----   ----
+    #        15  2020-06-01 16:03   data.txt
+    # ---------                     -------
+    #        15                     1 file
+    # EOM
+
+    like $stdout, qr/:03\s+data.txt/, "unzip -l shows data.txt";
 
 
-is $stderr, "", "No stderr";
+    is $stderr, "", "No stderr";
 
-ok ! -e "data.txt", "data.txt does not exist yet";
+    ok ! -e "data.txt", "data.txt does not exist yet";
 
-($status, $stdout, $stderr) = run("unzip $BadZIP");
+    ($status, $stdout, $stderr) = run("unzip $BadZIP");
 
-is $status, 0, "unzip returned zero for extraction";
-is $stderr, "", "stderr empty";
-like $stdout, qr/extracting: data.txt/, "stdout ok";
+    is $status, 0, "unzip returned zero for extraction";
+    is $stderr, "", "stderr empty";
+    like $stdout, qr/extracting: data.txt/, "stdout ok";
 
-ok -e "data.txt", "data.txt now exists";
-is readFile("data.txt"), "this is a test\n", "File contents ok";
+    ok -e "data.txt", "data.txt now exists";
+    is readFile("data.txt"), "this is a test\n", "File contents ok";
+}
 
 chdir $HERE ;
 

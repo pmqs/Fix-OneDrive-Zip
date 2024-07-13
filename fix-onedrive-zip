@@ -48,10 +48,18 @@ GetOptions ("dry-run" => \$dry_run,
 Usage()
     unless @ARGV >= 1;
 
+# run a quick sanility test on all the zip files
 for my $filename (@ARGV)
 {
+    # check exists & can read
     open my $fh,  "+<$filename"
         or die "Error: Cannot open '$filename': $!\n";
+
+    # check no empty &
+    my $fileSize = -s $filename ;
+
+    die "Error: zip file '$filename' is empty\n"
+        if $fileSize == 0;
 }
 
 for my $filename (@ARGV)
