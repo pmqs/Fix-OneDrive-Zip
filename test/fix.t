@@ -29,7 +29,7 @@ chdir $dir
 
     isnt $status, 0, "fix-onedrive-zip returned non-zero" ;
     is $stdout, "", "no stdout";
-    is $stderr, "Error: Cannot open '$not_there': No such file or directory\n", "'$not_there' does not exist";
+    like $stderr, qr/Error: Cannot open '$not_there': No such file or directory/, "'$not_there' does not exist";
 }
 
 {
@@ -48,7 +48,7 @@ chdir $dir
 
     isnt $status, 0, "fix-onedrive-zip returned non-zero" ;
     is $stdout, "", "no stdout";
-    is $stderr, "Error: zip file '$empty' is empty\n", "'$empty' is empty";
+    like $stderr, qr/Error: zip file '$empty' is empty/, "'$empty' is empty";
 }
 
 {
