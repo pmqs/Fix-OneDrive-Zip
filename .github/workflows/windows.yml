@@ -30,7 +30,6 @@ jobs:
           # also, 5.40.3 is failing
           my $skip = join '|', map { quotemeta $_ }
                                qw( 5.6.
-                                   5.40.3
                                    );
           @default_versions = grep { ! /^$skip/ } @default_versions;
 
@@ -56,21 +55,9 @@ jobs:
             print "\t$v\n";
           }
 
-          # Lots of random failures with strawberry perl
+          # Don't want anything less then 5.8
           my $skip = join '|', map { quotemeta $_ }
-                               qw( 5.40.
-                                   5.38.
-                                   5.28.
-                                   5.24.
-                                   5.22.
-                                   5.20.
-                                   5.18.
-                                   5.16.
-                                   5.14.
-                                   5.12.
-                                   5.10.
-                                   5.8.
-                                   5.6.
+                               qw( 5.6.
                                  );
           @strawberry_versions = grep { ! /^$skip/ } @strawberry_versions;
 
@@ -118,8 +105,6 @@ jobs:
         with:
           perl-version: ${{ matrix.perl }}
           distribution: ${{ matrix.distribution }}
-      - name: Install packages
-        run: choco install make
       - name: Perl version
         run: perl -V
       - name: Unzip version
