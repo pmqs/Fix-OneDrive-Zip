@@ -192,7 +192,7 @@ please report them at https://github.com/pmqs/Fix-OneDrive-Zip/issues.
 
 ## Copyright
 
-Copyright (c) 2020-2025 Paul Marquess (pmqs@cpan.org). All rights reserved.
+Copyright (c) 2020-2026 Paul Marquess (pmqs@cpan.org). All rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
