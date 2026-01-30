@@ -56,8 +56,17 @@ jobs:
           }
 
           # Don't want anything less then 5.8
+          # Plus a pile of others are not available
           my $skip = join '|', map { quotemeta $_ }
-                               qw( 5.6.
+                               qw( 5.40.
+                                   5.38.
+                                   5.28.
+                                   5.22.
+                                   5.16.
+                                   5.12.
+                                   5.10.
+                                   5.8.
+                                   5.6.
                                  );
           @strawberry_versions = grep { ! /^$skip/ } @strawberry_versions;
 
