@@ -4,46 +4,127 @@ on:
   workflow_dispatch:
   push:
   pull_request:
+  schedule:
+    - cron: '01 01 * * 6'    # Run every Saturday
 
 jobs:
-  build:
 
+
+  list-windows-default:
+    name: perl versions for windows default
     runs-on: windows-latest
-
-    strategy:
-      matrix:
-        perl:
-          - '5.42'
-          - '5.40'
-          - '5.38'
-          - '5.36'
-          - '5.34'
-          - '5.32'
-          - '5.30'
-          - '5.28'
-          - '5.26'
-          - '5.24'
-          - '5.22'
-          - '5.20'
-          - '5.18'
-          - '5.16'
-          - '5.14'
-#           - '5.12'
-#           - '5.10'
-#           - '5.8'
-
-    name: Perl ${{ matrix.perl }}
     steps:
-    - uses: actions/checkout@v6
-    - name: Setup perl
-      uses: shogo82148/actions-setup-perl@v1
-      with:
-        perl-version: ${{ matrix.perl }}
-    - name: Perl version
-      run: perl -V
-    - name: Unzip version
-      run: unzip -h
-    - name: Syntax Check
-      run: perl -c fix-onedrive-zip
-    - name: Test
-      run: perl test\fix.t
+      - uses: shogo82148/actions-setup-perl@v1
+      - id: set-matrix
+        name: list available perl versions
+        shell: perl {0}
+        run: |
+          use Actions::Core;
+
+          print "Default Version available\n";
+          my @default_versions = perl_versions();
+          for my $v (@default_versions) {
+            print "\t$v\n";
+          }
+          # Don't want anything less then 5.8
+          # also, 5.40.3 is failing
+          my $skip = join '|', map { quotemeta $_ }
+                               qw( 5.6.
+                                   5.40.3
+                                   );
+          @default_versions = grep { ! /^$skip/ } @default_versions;
+
+          set_output(matrix => {perl => [@default_versions],    distribution => ['default'] });
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+
+  list-windows-strawberry:
+    name: perl version for windows strawberry
+    runs-on: windows-latest
+    steps:
+      - uses: shogo82148/actions-setup-perl@v1
+      - id: set-matrix
+        name: list available perl versions
+        shell: perl {0}
+        run: |
+          use Actions::Core;
+
+          print "Strawberry Version available\n";
+          my @strawberry_versions = perl_versions();
+          for my $v (@strawberry_versions) {
+            print "\t$v\n";
+          }
+
+          # Lots of random failures with strawberry perl
+          my $skip = join '|', map { quotemeta $_ }
+                               qw( 5.40.
+                                   5.38.
+                                   5.28.
+                                   5.24.
+                                   5.22.
+                                   5.20.
+                                   5.18.
+                                   5.16.
+                                   5.14.
+                                   5.12.
+                                   5.10.
+                                   5.8.
+                                   5.6.
+                                 );
+          @strawberry_versions = grep { ! /^$skip/ } @strawberry_versions;
+
+          set_output(matrix => {perl => [@strawberry_versions], distribution => ['strawberry'] });
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+  run-windows-default:
+    name: Perl ${{ matrix.perl }} on '${{ matrix.distribution }}'
+    runs-on: windows-latest
+    needs: list-windows-default
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.list-windows-default.outputs.matrix )}}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: ${{ matrix.perl }}
+          distribution: ${{ matrix.distribution }}
+      - name: Install packages
+        run: choco install make
+      - name: Perl version
+        run: perl -V
+      - name: Unzip version
+        run: unzip -h
+      - name: Syntax Check
+        run: perl -c fix-onedrive-zip
+      - name: Test
+        run: perl test\fix.t
+
+
+  run-windows-strawberry:
+    name: Perl ${{ matrix.perl }} on '${{ matrix.distribution }}'
+    runs-on: windows-latest
+    needs: list-windows-strawberry
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJson(needs.list-windows-strawberry.outputs.matrix)}}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: ${{ matrix.perl }}
+          distribution: ${{ matrix.distribution }}
+      - name: Install packages
+        run: choco install make
+      - name: Perl version
+        run: perl -V
+      - name: Unzip version
+        run: unzip -h
+      - name: Syntax Check
+        run: perl -c fix-onedrive-zip
+      - name: Test
+        run: perl test\fix.t

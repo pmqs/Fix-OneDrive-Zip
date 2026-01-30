@@ -4,46 +4,50 @@ on:
   workflow_dispatch:
   push:
   pull_request:
+  schedule:
+    - cron: '01 01 * * 6'    # Run every Saturday
 
 jobs:
-  build:
 
+  list:
+    name: list available perl versions
     runs-on: macos-latest
-
-    strategy:
-      matrix:
-        perl:
-          - '5.42'
-          - '5.40'
-          - '5.38'
-          - '5.36'
-          - '5.34'
-          - '5.32'
-          - '5.30'
-          - '5.28'
-          - '5.26'
-          - '5.24'
-          - '5.22'
-          - '5.20'
-          - '5.18'
-          - '5.16'
-          - '5.14'
-          - '5.12'
-          - '5.10'
-          - '5.8'
-
-    name: Perl ${{ matrix.perl }}
     steps:
-    - uses: actions/checkout@v6
-    - name: Setup perl
-      uses: shogo82148/actions-setup-perl@v1
-      with:
-        perl-version: ${{ matrix.perl }}
-    - name: Perl version
-      run: perl -V
-    - name: Unzip version
-      run: unzip -h
-    - name: Syntax Check
-      run: perl -c fix-onedrive-zip
-    - name: Test
-      run: prove -v test
+      - uses: shogo82148/actions-setup-perl@v1
+      - id: set-matrix
+        name: list available perl versions
+        shell: perl {0}
+        run: |
+          use Actions::Core;
+
+          print "Version available\n";
+          my @versions = perl_versions();
+          for my $v (@versions) {
+            print "\t$v\n";
+          }
+          # Don't want anything less then 5.8
+          @versions = grep { ! /^5\.6\.*/ } @versions;
+          set_output(matrix => {perl => [@versions]});
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+  run:
+    runs-on: macos-latest
+    needs: list
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJson(needs.list.outputs.matrix)}}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: ${{ matrix.perl }}
+      - name: Perl version
+        run: perl -V
+      - name: Unzip version
+        run: unzip -h
+      - name: Syntax Check
+        run: perl -c fix-onedrive-zip
+      - name: Test
+        run: prove -v test
