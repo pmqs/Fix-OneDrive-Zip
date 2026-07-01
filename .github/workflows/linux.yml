@@ -38,7 +38,7 @@ jobs:
       fail-fast: false
       matrix: ${{fromJson(needs.list.outputs.matrix)}}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Setup perl
         uses: shogo82148/actions-setup-perl@v1
         with:
